@@ -1,4 +1,4 @@
-import ai_model_creator
+import model_handler
 import data_manipulator
 import comparison_tools
 from keras.datasets import mnist
@@ -7,7 +7,7 @@ from keras.datasets import mnist
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
 ## Unbalanced model
-bad_model = ai_model_creator.cnn_model()
+bad_model = model_handler.cnn_model()
 
 # split the train images and labels to unbalanced sub-sets
 train_half_set_iter = data_manipulator.split_unbalanced(train_labels, [i for i in range(0, 5)],
@@ -31,7 +31,7 @@ test_loss, test_acc_unbalanced = bad_model.evaluate(test_images, test_labels)
 print(test_acc_unbalanced)
 
 ## Normal model
-normal_model = ai_model_creator.cnn_model()
+normal_model = model_handler.cnn_model()
 
 # prepare data
 train_images, train_labels = data_manipulator.prepare_visual_data(train_images, train_labels)
