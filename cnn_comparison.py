@@ -71,4 +71,4 @@ print('Histogram comparison')
 nm_biases_hist, bm_biases_hist, biases_bins = comparison_tools.compare_distributions_with_histogram(nm_dense_biases,
                                                                                                     bm_dense_biases)
 print('normal: %s\n   bad: %s' % (nm_biases_hist, bm_biases_hist))
-print('bins  : %s\n' % bm_biases_hist)
+print('bins  : %s\n' % biases_bins)
