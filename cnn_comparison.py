@@ -72,3 +72,19 @@ nm_biases_hist, bm_biases_hist, biases_bins = comparison_tools.compare_distribut
                                                                                                     bm_dense_biases)
 print('normal: %s\n   bad: %s' % (nm_biases_hist, bm_biases_hist))
 print('bins  : %s\n' % biases_bins)
+
+model_handler.save_model(normal_model, 'normal_model')
+model_handler.save_model(bad_model, 'bad_model')
+
+loaded_normal_model = model_handler.load_model('normal_model')
+model_handler.compile_cnn_model(loaded_normal_model)
+loaded_bad_model = model_handler.load_model('bad_model')
+model_handler.compile_cnn_model(loaded_bad_model)
+
+_, test_acc_normal_loaded = loaded_normal_model.evaluate(test_images, test_labels)
+_, test_acc_bad_loaded = loaded_normal_model.evaluate(test_images, test_labels)
+print("Accuracy")
+print("Normal model", test_acc_normal)
+print("Loaded Normal model", test_acc_normal)
+print("Unbalanced model", test_acc_unbalanced)
+print("Loaded Unbalanced model", test_acc_unbalanced)
