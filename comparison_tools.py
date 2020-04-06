@@ -63,3 +63,20 @@ def compare_distributions_with_histogram(vectorA, vectorB):
     hist_a, bins = np.histogram(vectorA)
     hist_b, _ = np.histogram(vectorB, bins)
     return hist_a, hist_b, bins
+
+
+def calculate_layer_distance(ref_weights, comp_weights):
+    """
+    Calculates the distance between two layers. The layers should have the same shape.
+    It is assumed that the layers belong to different snapshots of the same model,
+    and there exists a 1-to-1 correspondence between neurons of the two layers.
+    :param ref_weights:  The weights of the reference layer
+    :param comp_weights: The weights of the layer that is compared to the reference one
+    :return: A tuple consisting of:
+            a) the mean squared error per filter layer
+            b) the mean root squared error per filter in the layer
+    """
+    se = np.square(ref_weights - comp_weights)
+    mse = se.mean(axis=tuple(range(0, se.ndim - 1)))
+    rmse = np.sqrt(mse)
+    return mse, rmse
