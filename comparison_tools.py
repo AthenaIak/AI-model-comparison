@@ -39,6 +39,28 @@ def get_weights_for_layer(layer):
     return layer_weights, layer_weights_flat, layer_bias
 
 
+def get_weights_for_network(network):
+    """
+    Extracts the weights and biases for each layer of a network.
+    :param network: The network that the layer weights and biases will be extracted from.
+    :return: A triple consisting of a list of values for each layer, containing the layer's
+             a) weights,
+             b) flattened weights (weights as a list of values),
+             c) biases.
+    """
+    weights_per_layer = []
+    weights_flat_per_layer = []
+    bias_per_layer = []
+    for layer in network.layers:
+        if layer.get_weights():
+            layer_weights, layer_weights_flat, layer_bias = get_weights_for_layer(layer)
+            weights_per_layer.append(layer_weights)
+            weights_flat_per_layer.append(layer_weights_flat)
+            bias_per_layer.append(layer_bias)
+
+    return weights_per_layer, weights_flat_per_layer, bias_per_layer
+
+
 def compare_distributions_with_ks(vectorA, vectorB):
     """
     Computes the Kolmogorov-Smirnov statistic on 2 vectors.
