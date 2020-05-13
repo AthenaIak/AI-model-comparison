@@ -42,6 +42,9 @@ def demo_incremental_model():
     reporter.generate_snapshot_comparison_report(incremental_models, 'conv2d', 0, parts - 1)
     reporter.generate_snapshot_comparison_report(incremental_models, 'conv2d', 0)
 
+    reporter.generate_snapshot_comparison_report(incremental_models, None, 0, parts - 1)
+    reporter.generate_snapshot_comparison_report(incremental_models, None, 0)
+
 
 demo_unbalanced_model()
 demo_incremental_model()
