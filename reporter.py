@@ -62,20 +62,30 @@ def generate_snapshot_comparison_report(models, layer_type=None, layer_order=0, 
         else:
             layer_weights[part], _, _ = comparison_tools.get_weights_for_network(models[part])
 
+    num_layers = len(layer_weights[0])
+    rmse_all = [None] * num_layers
     if ref_idx is None:
         print('\nRoot mean squared error between a model and the next one in the sequence: ')
-        for part in range(parts - 1):
-            for layer_num in range(len(layer_weights[part])):
+        for layer_num in range(num_layers):
+            rmse_per_combo = [None] * (parts - 1)
+            for part in range(parts - 1):
                 _, rmse = comparison_tools.calculate_layer_distance(layer_weights[part][layer_num],
                                                                     layer_weights[part + 1][layer_num])
+                rmse_per_combo[part] = rmse
                 print('layer %3d part %3d vs part %3d: %f\n%s' % (layer_num + 1, part + 1, part + 2, rmse.mean(), rmse))
+            rmse_all[layer_num] = rmse_per_combo
     else:
         # make a list of the indexes of the models that should be compared to the reference one
         compared_idxs = list(filter(lambda a: a != ref_idx, [idx for idx in range(parts)]))
 
         print('\nRoot mean squared error between the reference model and other models: ')
-        for part in compared_idxs:
-            for layer_num in range(len(layer_weights[part])):
+        for layer_num in range(num_layers):
+            rmse_per_combo = [None] * len(compared_idxs)
+            for part in compared_idxs:
                 _, rmse = comparison_tools.calculate_layer_distance(layer_weights[ref_idx][layer_num],
                                                                     layer_weights[part][layer_num])
+                rmse_per_combo[part] = rmse
                 print('layer %3d part %3d: %f\n%s' % (layer_num + 1, part + 1, rmse.mean(), rmse))
+            rmse_all[layer_num] = rmse_per_combo
+
+    comparison_tools.metric_to_csv(rmse_all)

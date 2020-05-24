@@ -102,3 +102,24 @@ def calculate_layer_distance(ref_weights, comp_weights):
     mse = se.mean(axis=tuple(range(0, se.ndim - 1)))
     rmse = np.sqrt(mse)
     return mse, rmse
+
+
+def metric_to_csv(metric):
+    """
+    Exports a csv from an list of metrics.
+    :param metric: The comparison metric.
+                   The first dimension refers to the layers of the network.
+                   The second to the combinations of networks that were compared.
+                   The third is the metric calculated for each layer's filter.
+    :return: The list is printed in the console in a csv format.
+    """
+    num_layers = len(metric)
+    num_combos = len(metric[0])
+    for layer_num in range(num_layers):
+        idx_sorted_filters = np.argsort(np.mean(metric[layer_num][:], axis=0)[::-1])
+        print("Layer,Model,", end="")
+        for filter_idx in idx_sorted_filters:
+            print("Filter", filter_idx, end=",")
+        print()
+        for combo in range(num_combos):
+            print('%d,%d,%s' % (layer_num, combo, ','.join(map(str, metric[layer_num][combo][idx_sorted_filters]))))
