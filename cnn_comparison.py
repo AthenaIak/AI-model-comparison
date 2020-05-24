@@ -26,12 +26,12 @@ def demo_unbalanced_model():
     reporter.generate_naive_report([normal_model, bad_model])
 
 
-def demo_incremental_model():
+def demo_incremental_model(filename_prefix='normal_model_part_'):
     parts = 10
     incremental_models = [None] * parts
     accuracy_per_model = [None] * parts
     for part in range(parts):
-        incremental_models[part] = model_handler.load_model('normal_model_part_' + str(part + 1) + '_of_' + str(parts))
+        incremental_models[part] = model_handler.load_model(filename_prefix + str(part + 1) + '_of_' + str(parts))
         model_handler.compile_cnn_model(incremental_models[part])
         _, test_acc = incremental_models[part].evaluate(test_images, test_labels)
         accuracy_per_model[part] = test_acc
@@ -46,5 +46,10 @@ def demo_incremental_model():
     reporter.generate_snapshot_comparison_report(incremental_models, None, 0)
 
 
+def demo_exponentially_incremental_model():
+    demo_incremental_model('normal_model_exponential_part_')
+
+
 demo_unbalanced_model()
 demo_incremental_model()
+demo_exponentially_incremental_model()
